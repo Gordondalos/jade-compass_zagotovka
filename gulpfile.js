@@ -7,8 +7,8 @@ var gulp = require('gulp'),
 	uglify = require('gulp-uglify'),
 	sourcemaps = require('gulp-sourcemaps'),
 	rigger = require('gulp-rigger'),
-	cssmin = require('gulp-minify-css'), // минимизирует ксс
-	rimraf = require('rimraf'), // очищает директорию
+	cssmin = require('gulp-minify-css'), // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+	rimraf = require('rimraf'), // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	browserSync = require("browser-sync"),
 	reload = browserSync.reload;
 
@@ -85,7 +85,7 @@ gulp.task('fonts:build', function() {
 
 gulp.task('jade:build', function() {
 	gulp.src(path.src.jade)
-		.pipe(jade())
+		.pipe(jade({pretty: true}))
 		.pipe(gulp.dest(path.build.jade))
 		.pipe(reload({stream: true}));
 });
