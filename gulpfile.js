@@ -7,9 +7,10 @@ var gulp = require('gulp'),
 	uglify = require('gulp-uglify'),
 	sourcemaps = require('gulp-sourcemaps'),
 	rigger = require('gulp-rigger'),
-	cssmin = require('gulp-minify-css'), // ������������ ���
-	rimraf = require('rimraf'), // ������� ����������
+	cssmin = require('gulp-minify-css'),
+	rimraf = require('rimraf'),
 	browserSync = require("browser-sync"),
+	coffee = require('gulp-coffee'),
 	reload = browserSync.reload;
 
 var path = {
@@ -17,7 +18,8 @@ var path = {
 		html: 'build/',
 		js: 'build/js/',
 		fonts: 'build/fonts/',
-		jade: 'build/'
+		jade: 'build/',
+		coffee: 'build/js/'
 	},
 	src: {
 		html: 'src/*.html',
@@ -25,13 +27,15 @@ var path = {
 		style: 'src/sass/main.sass',
 		img: 'src/img/**/*.*',
 		fonts: 'src/fonts/**/*.*',
-		jade: 'src/jade/**/*.*'
+		jade: 'src/jade/**/*.*',
+		coffee: 'src/coffee/**/*.*'
 	},
 	watch: {
 		html: 'src/**/*.html',
 		js: 'src/js/**/*.js',
 		fonts: 'src/fonts/**/*.*',
-		jade: 'src/jade/**/*.*'
+		jade: 'src/jade/**/*.*',
+		coffee: 'src/coffee/**/*.*'
 	},
 	clean: './build'
 };
@@ -53,7 +57,12 @@ gulp.task('jade', function() {
 		.pipe(gulp.dest(path.build.jade))
 });
 
-
+gulp.task('coffee', function () {
+	gulp.src(path.src.coffee)
+		.pipe(coffee({bare: true}))
+		.pipe(sourcemaps.write('./maps'))
+		.pipe(gulp.dest(path.build.coffee))
+});
 
 gulp.task('webserver', function () {
 	browserSync(config);
@@ -90,10 +99,19 @@ gulp.task('jade:build', function() {
 		.pipe(reload({stream: true}));
 });
 
+
+gulp.task('coffee:build', function() {
+	gulp.src(path.src.coffee)
+		.pipe(coffee({bare: false})) // тру фолс позволяет делать самовызывающуюся функцию
+		.pipe(gulp.dest(path.build.coffee))
+
+});
+
 gulp.task('build', [
 	'js:build',
 	'fonts:build',
-	'jade:build'
+	'jade:build',
+	'coffee:build'
 ]);
 
 
@@ -108,6 +126,11 @@ gulp.task('watch', function(){
 
 	watch([path.watch.fonts], function(event, cb) {
 		gulp.start('fonts:build');
+
+	});
+
+	watch([path.watch.coffee], function(event, cb) {
+		gulp.start('coffee:build');
 
 	});
 
